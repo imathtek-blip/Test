@@ -9,6 +9,25 @@
   --primary-blue: #B6D4FF;
   --accent-pink: #FF69B4;
   --accent-blue: #4A90E2;
+  --light-pink: #FFE5F0;
+  --light-blue: #E5F2FF;
+}
+
+/* Background gradients */
+.gradient-bg {
+  background: linear-gradient(135deg, var(--light-pink) 0%, var(--light-blue) 100%);
+}
+
+.gradient-pink-blue {
+  background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-blue) 100%);
+}
+
+/* Text gradients */
+.text-gradient {
+  background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 * {
