@@ -9,7 +9,7 @@ Un site web élégant et moderne pour un studio de photographie boudoir, érotiq
 - **Tailwind CSS** - Framework CSS utilitaire moderne
 - **Framer Motion** - Animations fluides et élégantes
 - **React Hook Form + Zod** - Gestion des formulaires avec validation
-- **Prisma** - ORM pour la base de données (configuration incluse)
+- **bcryptjs** - Hachage des mots de passe
 
 ## Caractéristiques
 
@@ -68,11 +68,7 @@ Accédez à [http://localhost:3000](http://localhost:3000)
 ## Configuration
 
 ### Variables d'environnement (.env)
-```env
-DATABASE_URL="file:./dev.db"
-NEXTAUTH_SECRET="your-secret-key-change-in-production"
-NEXTAUTH_URL="http://localhost:3000"
-```
+Aucune configuration nécessaire pour démarrer. Le fichier `.env` est optionnel pour cette version.
 
 ### Personnalisation des couleurs
 Les couleurs sont définies dans `tailwind.config.ts` et `app/globals.css` :
@@ -120,25 +116,26 @@ npm run start
 
 ## Améliorations Futures
 
-- [ ] Intégration d'une vraie base de données (PostgreSQL)
-- [ ] Système d'authentification complet avec NextAuth
-- [ ] Upload d'images direct depuis l'admin
-- [ ] Optimisation des images avec Next.js Image
+- [ ] Intégration d'une vraie base de données (PostgreSQL/MongoDB)
+- [ ] Système d'authentification JWT sécurisé
+- [ ] Upload d'images direct depuis l'admin avec stockage cloud (Cloudinary/S3)
 - [ ] Système de réservation en ligne avec calendrier
 - [ ] Newsletter et marketing par email
 - [ ] Galerie avec chargement lazy et pagination
 - [ ] Mode sombre (optionnel)
 - [ ] Multi-langue (FR/EN)
+- [ ] Analytics et suivi des conversions
 
 ## Sécurité
 
 ⚠️ **Important pour la production** :
-1. Changez le mot de passe admin par défaut
-2. Utilisez une vraie base de données
-3. Implémentez NextAuth pour l'authentification
-4. Activez HTTPS
-5. Configurez les en-têtes de sécurité
-6. Validez toutes les entrées utilisateur côté serveur
+1. Changez le mot de passe admin par défaut (actuellement en dur dans le code)
+2. Implémentez une vraie authentification avec JWT et base de données
+3. Utilisez une base de données (PostgreSQL, MongoDB) au lieu de fichiers JSON
+4. Configurez HTTPS et les en-têtes de sécurité
+5. Implémentez un système de limitation de débit (rate limiting)
+6. Ajoutez une protection CSRF pour les formulaires
+7. Utilisez des variables d'environnement pour les secrets
 
 ## Support
 
