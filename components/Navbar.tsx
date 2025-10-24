@@ -1,66 +1,67 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
+import MagneticButton from './MagneticButton';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const { scrollY } = useScroll();
+
+  useEffect(() => {
+    return scrollY.on('change', (latest) => {
+      setIsScrolled(latest > 50);
+    });
+  }, [scrollY]);
 
   const navLinks = [
-    { href: '/', label: 'Accueil', icon: '🏠' },
-    { href: '/gallery', label: 'Galerie', icon: '📸' },
-    { href: '/pricing', label: 'Tarifs', icon: '💎' },
-    { href: '/contact', label: 'Contact', icon: '✉️' },
+    { href: '/', label: 'Accueil' },
+    { href: '/gallery', label: 'Galerie' },
+    { href: '/pricing', label: 'Tarifs' },
+    { href: '/contact', label: 'Contact' },
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-pink-50 via-white to-blue-50 backdrop-blur-md shadow-lg border-b-2 border-pink-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+    <motion.nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? 'glass border-b border-gray-200'
+          : 'bg-transparent'
+      }`}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex items-center justify-between h-24">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 group">
+          <Link href="/" className="group">
             <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-blue-400 flex items-center justify-center text-2xl shadow-lg group-hover:shadow-xl transition-shadow"
+              className="font-display text-3xl tracking-tight"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
             >
-              📷
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="hidden sm:block"
-            >
-              <div className="text-2xl font-bold font-playfair text-gradient">
-                Studio Boudoir
-              </div>
-              <div className="text-xs text-gray-500 -mt-1">Photographie Élégante</div>
+              <span className="font-light">Studio</span>
+              <span className="font-normal ml-1">Boudoir</span>
             </motion.div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-2">
+          <div className="hidden md:flex items-center gap-12">
             {navLinks.map((link, index) => (
               <motion.div
                 key={link.href}
-                initial={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.1 + 0.2 }}
               >
                 <Link
                   href={link.href}
-                  className="group relative px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:scale-105"
+                  className="elegant-line text-sm tracking-wide font-medium text-gray-700 hover:text-black transition-colors"
                 >
-                  <span className="flex items-center gap-2">
-                    <span className="text-xl">{link.icon}</span>
-                    <span className="text-gray-700 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:to-blue-500 group-hover:bg-clip-text">
-                      {link.label}
-                    </span>
-                  </span>
-                  <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-400 to-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                  />
+                  {link.label}
                 </Link>
               </motion.div>
             ))}
@@ -68,38 +69,39 @@ export default function Navbar() {
 
           {/* CTA Button Desktop */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6 }}
             className="hidden md:block"
           >
-            <Link
-              href="/contact"
-              className="px-6 py-3 bg-gradient-to-r from-pink-500 to-blue-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
-            >
-              Réserver
-            </Link>
+            <MagneticButton strength={0.2}>
+              <Link
+                href="/contact"
+                className="btn-elegant rounded-none px-8 py-3 text-xs"
+              >
+                Réserver
+              </Link>
+            </MagneticButton>
           </motion.div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-xl bg-gradient-to-r from-pink-100 to-blue-100 hover:from-pink-200 hover:to-blue-200 transition-all"
+            className="md:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 group"
+            aria-label="Toggle menu"
           >
-            <svg
-              className="w-6 h-6 text-gray-700"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              {isOpen ? (
-                <path d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
+            <motion.span
+              animate={isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+              className="w-6 h-0.5 bg-black transition-all"
+            />
+            <motion.span
+              animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
+              className="w-6 h-0.5 bg-black transition-all"
+            />
+            <motion.span
+              animate={isOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+              className="w-6 h-0.5 bg-black transition-all"
+            />
           </button>
         </div>
       </div>
@@ -111,9 +113,9 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-gradient-to-br from-pink-50 to-blue-50 border-t border-pink-200"
+            className="md:hidden glass-dark border-t border-white/10"
           >
-            <div className="px-4 py-6 space-y-2">
+            <div className="px-6 py-8 space-y-1">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.href}
@@ -123,25 +125,31 @@ export default function Navbar() {
                 >
                   <Link
                     href={link.href}
-                    className="flex items-center gap-3 py-3 px-4 rounded-xl bg-white hover:bg-gradient-to-r hover:from-pink-100 hover:to-blue-100 transition-all shadow-sm"
+                    className="block py-4 text-white text-xl font-light tracking-wide hover:translate-x-2 transition-transform"
                     onClick={() => setIsOpen(false)}
                   >
-                    <span className="text-2xl">{link.icon}</span>
-                    <span className="text-gray-700 font-medium">{link.label}</span>
+                    {link.label}
                   </Link>
                 </motion.div>
               ))}
-              <Link
-                href="/contact"
-                className="block mt-4 py-3 px-4 bg-gradient-to-r from-pink-500 to-blue-500 text-white text-center rounded-xl font-semibold shadow-lg"
-                onClick={() => setIsOpen(false)}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="pt-6"
               >
-                Réserver maintenant
-              </Link>
+                <Link
+                  href="/contact"
+                  className="block py-4 px-8 bg-white text-black text-center text-sm tracking-widest uppercase font-medium"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Réserver
+                </Link>
+              </motion.div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 }

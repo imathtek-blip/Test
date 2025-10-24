@@ -1,64 +1,73 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import ScrollReveal from '@/components/ScrollReveal';
 
-// Données de démonstration - à remplacer par les vraies données de la base de données
 const sampleImages = [
   {
     id: 1,
     url: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800',
     title: 'Boudoir Élégant',
-    category: 'boudoir'
+    category: 'boudoir',
+    height: 600,
   },
   {
     id: 2,
     url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800',
     title: 'Portrait Mode',
-    category: 'mode'
+    category: 'mode',
+    height: 500,
   },
   {
     id: 3,
     url: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800',
     title: 'Style Artistique',
-    category: 'artistique'
+    category: 'artistique',
+    height: 550,
   },
   {
     id: 4,
     url: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800',
     title: 'Boudoir Intimiste',
-    category: 'boudoir'
+    category: 'boudoir',
+    height: 650,
   },
   {
     id: 5,
     url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800',
     title: 'Portrait Naturel',
-    category: 'mode'
+    category: 'mode',
+    height: 500,
   },
   {
     id: 6,
     url: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=800',
     title: 'Glamour',
-    category: 'mode'
+    category: 'mode',
+    height: 600,
   },
   {
     id: 7,
     url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800',
     title: 'Élégance',
-    category: 'boudoir'
+    category: 'boudoir',
+    height: 550,
   },
   {
     id: 8,
     url: 'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?w=800',
     title: 'Beauté Naturelle',
-    category: 'artistique'
+    category: 'artistique',
+    height: 600,
   },
   {
     id: 9,
     url: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800',
     title: 'Portrait Studio',
-    category: 'mode'
+    category: 'mode',
+    height: 500,
   },
 ];
 
@@ -71,47 +80,78 @@ const categories = [
 
 export default function Gallery() {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedImage, setSelectedImage] = useState<typeof sampleImages[0] | null>(null);
+  const [selectedImage, setSelectedImage] = useState<(typeof sampleImages)[0] | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const filteredImages = selectedCategory === 'all'
-    ? sampleImages
-    : sampleImages.filter(img => img.category === selectedCategory);
+  const filteredImages =
+    selectedCategory === 'all'
+      ? sampleImages
+      : sampleImages.filter((img) => img.category === selectedCategory);
+
+  useEffect(() => {
+    if (selectedImage) {
+      const index = filteredImages.findIndex((img) => img.id === selectedImage.id);
+      setCurrentIndex(index);
+    }
+  }, [selectedImage, filteredImages]);
+
+  const goToNext = () => {
+    const nextIndex = (currentIndex + 1) % filteredImages.length;
+    setSelectedImage(filteredImages[nextIndex]);
+  };
+
+  const goToPrev = () => {
+    const prevIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+    setSelectedImage(filteredImages[prevIndex]);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedImage) return;
+      if (e.key === 'ArrowRight') goToNext();
+      if (e.key === 'ArrowLeft') goToPrev();
+      if (e.key === 'Escape') setSelectedImage(null);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImage, currentIndex]);
 
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-gradient-to-br from-pink-50 to-blue-50 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.h1
+      <section className="py-32 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl font-bold mb-4 font-playfair bg-gradient-to-r from-pink-400 to-blue-400 bg-clip-text text-transparent"
+            transition={{ duration: 0.8 }}
           >
-            Galerie
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-xl text-gray-700"
-          >
-            Découvrez notre portfolio de photographies boudoir, érotique et mode
-          </motion.p>
+            <span className="text-sm tracking-[0.3em] uppercase text-gray-500 font-light mb-6 block">
+              Portfolio
+            </span>
+            <h1 className="font-display text-6xl md:text-7xl lg:text-8xl mb-6 tracking-tight">
+              <span className="italic">Galerie</span>
+            </h1>
+            <p className="text-lg text-gray-600 font-light max-w-2xl mx-auto">
+              Découvrez notre collection de photographies boudoir, mode et artistiques
+            </p>
+          </motion.div>
         </div>
-      </div>
+      </section>
 
       {/* Filters */}
-      <div className="sticky top-16 bg-white/95 backdrop-blur-sm shadow-sm z-40 py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="sticky top-24 bg-white/95 backdrop-blur-lg z-40 py-8 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-wrap justify-center gap-4">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                className={`px-6 py-2 text-sm tracking-wider uppercase font-medium transition-all ${
                   selectedCategory === category.id
-                    ? 'bg-gradient-to-r from-pink-400 to-blue-400 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-black text-white'
+                    : 'bg-transparent text-gray-500 hover:text-black border border-gray-200'
                 }`}
               >
                 {category.label}
@@ -121,44 +161,43 @@ export default function Gallery() {
         </div>
       </div>
 
-      {/* Gallery Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <motion.div
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          <AnimatePresence>
+      {/* Gallery Grid - Masonry Layout */}
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
+          <AnimatePresence mode="popLayout">
             {filteredImages.map((image, index) => (
-              <motion.div
-                key={image.id}
-                layout
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                whileHover={{ scale: 1.05, zIndex: 10 }}
-                className="relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer shadow-lg group"
-                onClick={() => setSelectedImage(image)}
-              >
-                <Image
-                  src={image.url}
-                  alt={image.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 className="text-white font-semibold text-xl mb-2">{image.title}</h3>
-                    <span className="text-pink-300 text-sm uppercase tracking-wider">
-                      {image.category}
-                    </span>
+              <ScrollReveal key={image.id} delay={index * 0.05}>
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.4 }}
+                  className="mb-6 break-inside-avoid group cursor-pointer hover-lift"
+                  onClick={() => setSelectedImage(image)}
+                  style={{ height: `${image.height}px` }}
+                >
+                  <div className="relative w-full h-full overflow-hidden bg-gray-100">
+                    <Image
+                      src={image.url}
+                      alt={image.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                    <div className="absolute inset-0 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <h3 className="text-white text-xl font-display mb-1">{image.title}</h3>
+                      <span className="text-white/70 text-sm tracking-wider uppercase">
+                        {image.category}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </ScrollReveal>
             ))}
           </AnimatePresence>
-        </motion.div>
+        </div>
       </div>
 
       {/* Lightbox */}
@@ -169,20 +208,50 @@ export default function Gallery() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center"
           >
+            {/* Close Button */}
             <button
               onClick={() => setSelectedImage(null)}
-              className="absolute top-4 right-4 text-white text-4xl hover:text-pink-400 transition-colors z-10"
+              className="absolute top-8 right-8 text-white/60 hover:text-white text-sm tracking-wider uppercase z-10 transition-colors"
             >
-              &times;
+              Fermer
             </button>
+
+            {/* Navigation */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goToPrev();
+              }}
+              className="absolute left-8 text-white/60 hover:text-white text-4xl z-10 transition-colors"
+            >
+              ←
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goToNext();
+              }}
+              className="absolute right-8 text-white/60 hover:text-white text-4xl z-10 transition-colors"
+            >
+              →
+            </button>
+
+            {/* Image Counter */}
+            <div className="absolute top-8 left-8 text-white/60 text-sm tracking-wider">
+              {currentIndex + 1} / {filteredImages.length}
+            </div>
+
+            {/* Image */}
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              key={selectedImage.id}
+              initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.3 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-5xl max-h-[90vh] w-full"
+              className="relative max-w-6xl max-h-[80vh] w-full mx-8"
             >
               <div className="relative aspect-[3/4] w-full h-full">
                 <Image
@@ -191,11 +260,12 @@ export default function Gallery() {
                   fill
                   className="object-contain"
                   sizes="90vw"
+                  priority
                 />
               </div>
-              <div className="mt-4 text-center">
-                <h3 className="text-white text-2xl font-semibold mb-2">{selectedImage.title}</h3>
-                <span className="text-pink-400 uppercase tracking-wider">
+              <div className="mt-6 text-center">
+                <h3 className="text-white text-2xl font-display mb-2">{selectedImage.title}</h3>
+                <span className="text-white/60 uppercase tracking-wider text-sm">
                   {selectedImage.category}
                 </span>
               </div>
