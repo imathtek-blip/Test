@@ -1,327 +1,311 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import Button from '@/components/Button';
+import { useRef } from 'react';
+import ScrollReveal from '@/components/ScrollReveal';
+import MagneticButton from '@/components/MagneticButton';
+import AnimatedCounter from '@/components/AnimatedCounter';
+import ParallaxSection from '@/components/ParallaxSection';
 
 export default function Home() {
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-pink-100 via-white to-blue-100">
-        {/* Animated circles - Plus visibles */}
+      <section
+        ref={heroRef}
+        className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      >
         <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.3 }}
-          transition={{ duration: 1.5 }}
-          className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-pink-400 to-pink-300 rounded-full blur-3xl"
-        ></motion.div>
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.3 }}
-          transition={{ duration: 1.5, delay: 0.3 }}
-          className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-blue-400 to-blue-300 rounded-full blur-3xl"
-        ></motion.div>
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.2 }}
-          transition={{ duration: 1.5, delay: 0.6 }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-br from-pink-300 to-blue-300 rounded-full blur-3xl"
-        ></motion.div>
-
-        {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20">
+          style={{ opacity: heroOpacity, scale: heroScale }}
+          className="relative z-10 max-w-6xl mx-auto px-6 text-center py-32"
+        >
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="inline-block mb-6 px-6 py-2 bg-gradient-to-r from-pink-500 to-blue-500 text-white rounded-full text-sm font-semibold shadow-lg"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="mb-8"
           >
-            📸 Studio Photo Professionnel
+            <span className="text-sm tracking-[0.3em] uppercase text-gray-500 font-light">
+              Photographie Premium
+            </span>
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-6 font-playfair leading-tight"
+            transition={{ duration: 1, delay: 0.4 }}
+            className="font-display text-6xl md:text-8xl lg:text-9xl mb-8 tracking-tight leading-none"
           >
-            <span className="text-gradient">
-              Studio Boudoir
-            </span>
+            Studio
+            <br />
+            <span className="italic">Boudoir</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4 bg-gradient-to-r from-pink-600 to-blue-600 bg-clip-text text-transparent"
+            transition={{ duration: 1, delay: 0.6 }}
+            className="text-lg md:text-xl text-gray-600 mb-16 max-w-2xl mx-auto leading-relaxed font-light"
           >
-            Photographie Boudoir • Érotique • Mode
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-base sm:text-lg md:text-xl text-gray-700 mb-12 max-w-3xl mx-auto leading-relaxed px-4"
-          >
-            Révélez votre beauté dans un environnement élégant et professionnel.
-            <br className="hidden sm:block" />
-            Créez des souvenirs inoubliables qui célèbrent votre confiance et votre sensualité.
+            Capturer votre essence dans un environnement élégant et intime.
+            <br />
+            Une expérience photographique qui célèbre votre beauté naturelle.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4"
+            transition={{ duration: 1, delay: 0.8 }}
+            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
           >
-            <Link href="/contact">
-              <Button size="lg" className="w-full sm:w-auto min-w-[200px] text-lg shadow-2xl">
-                ✨ Réserver Maintenant
-              </Button>
-            </Link>
-            <Link href="/gallery">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto min-w-[200px] text-lg">
-                📸 Voir la Galerie
-              </Button>
+            <MagneticButton strength={0.3}>
+              <Link href="/contact" className="btn-elegant text-xs px-12 py-4">
+                Réserver une Session
+              </Link>
+            </MagneticButton>
+            <Link
+              href="/gallery"
+              className="elegant-line text-sm tracking-wider uppercase font-medium"
+            >
+              Voir la Galerie
             </Link>
           </motion.div>
+        </motion.div>
 
-          {/* Stats */}
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2"
+        >
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto px-4"
-          >
-            {stats.map((stat, index) => (
-              <div key={index} className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border-2 border-pink-200">
-                <div className="text-4xl font-bold text-gradient mb-2">{stat.value}</div>
-                <div className="text-gray-600 font-medium">{stat.label}</div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="w-px h-16 bg-gradient-to-b from-transparent via-black to-transparent"
+          />
+        </motion.div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 sm:py-20 lg:py-24 bg-white relative overflow-hidden">
-        {/* Background decorations */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-pink-200 rounded-full blur-3xl opacity-20"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-200 rounded-full blur-3xl opacity-20"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12 sm:mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 font-playfair text-gradient">
-              Pourquoi Choisir Notre Studio ?
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
-              Une expérience unique et personnalisée pour révéler votre beauté
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative group"
-              >
-                <div className="h-full p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-pink-50 to-blue-50 hover:from-pink-100 hover:to-blue-100 transition-all duration-300 shadow-lg hover:shadow-2xl border-2 border-transparent hover:border-pink-300">
-                  <div className="text-5xl sm:text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                    {feature.icon}
+      {/* Stats Section */}
+      <section className="py-24 border-y border-gray-200">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {stats.map((stat, index) => (
+              <ScrollReveal key={index} delay={index * 0.1}>
+                <div className="text-center">
+                  <div className="font-display text-5xl md:text-6xl mb-3 tracking-tight">
+                    {stat.animated && typeof stat.value === 'number' ? (
+                      <AnimatedCounter end={stat.value} suffix={stat.suffix} />
+                    ) : (
+                      <>
+                        {stat.value}
+                        {stat.suffix}
+                      </>
+                    )}
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-3 text-gray-800">{feature.title}</h3>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{feature.description}</p>
+                  <div className="text-sm tracking-wider uppercase text-gray-500 font-light">
+                    {stat.label}
+                  </div>
                 </div>
-                {/* Gradient border effect */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-pink-400 to-blue-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 blur-xl"></div>
-              </motion.div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing Highlight */}
-      <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 relative overflow-hidden">
-        {/* Animated background elements */}
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 90, 0]
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-pink-300 to-pink-200 rounded-full blur-3xl opacity-30"
-        ></motion.div>
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [90, 0, 90]
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-300 to-blue-200 rounded-full blur-3xl opacity-30"
-        ></motion.div>
+      {/* About Section */}
+      <section className="py-32">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <ScrollReveal direction="left">
+              <div>
+                <h2 className="font-display text-5xl md:text-6xl mb-8 tracking-tight leading-tight">
+                  Une expérience
+                  <br />
+                  <span className="italic">unique</span>
+                </h2>
+                <p className="text-lg text-gray-600 leading-relaxed mb-6 font-light">
+                  Notre studio offre un environnement élégant et confortable où vous
+                  pouvez vous sentir en confiance et révéler votre beauté authentique.
+                </p>
+                <p className="text-lg text-gray-600 leading-relaxed mb-8 font-light">
+                  Chaque séance est une collaboration artistique personnalisée,
+                  conçue pour capturer votre essence de manière intemporelle et
+                  raffinée.
+                </p>
+                <MagneticButton strength={0.2}>
+                  <Link href="/contact" className="btn-elegant text-xs px-10 py-3">
+                    Découvrir
+                  </Link>
+                </MagneticButton>
+              </div>
+            </ScrollReveal>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="bg-white/90 backdrop-blur-lg rounded-3xl sm:rounded-[3rem] shadow-2xl p-8 sm:p-12 lg:p-16 text-center max-w-4xl mx-auto border-4 border-pink-200"
-          >
-            <div className="inline-block mb-6 px-6 py-2 bg-gradient-to-r from-pink-500 to-blue-500 text-white rounded-full text-sm font-semibold">
-              💎 Offre Unique
+            <ScrollReveal direction="right">
+              <ParallaxSection speed={0.3}>
+                <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 rounded-sm overflow-hidden hover-lift">
+                  <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm tracking-wider">
+                    IMAGE PORTFOLIO
+                  </div>
+                </div>
+              </ParallaxSection>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-32 bg-black text-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <ScrollReveal>
+            <div className="text-center mb-20">
+              <h2 className="font-display text-5xl md:text-6xl mb-6 tracking-tight">
+                Nos <span className="italic">Services</span>
+              </h2>
+              <p className="text-lg text-gray-400 font-light">
+                Des séances photographiques adaptées à vos envies
+              </p>
             </div>
+          </ScrollReveal>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 font-playfair text-gray-800">
-              Une Offre Simple et Transparente
-            </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {services.map((service, index) => (
+              <ScrollReveal key={index} delay={index * 0.1}>
+                <div className="group hover-lift p-8 border border-white/10 hover:border-white/30 transition-colors">
+                  <div className="text-4xl mb-6">{service.icon}</div>
+                  <h3 className="text-2xl font-display mb-4 tracking-tight">
+                    {service.title}
+                  </h3>
+                  <p className="text-gray-400 leading-relaxed font-light mb-6">
+                    {service.description}
+                  </p>
+                  <div className="text-sm tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity">
+                    En savoir plus →
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            <motion.div
-              initial={{ scale: 0.5 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="relative inline-block mb-6"
-            >
-              <div className="text-6xl sm:text-7xl md:text-8xl font-bold text-gradient mb-2">
+      {/* Pricing Section */}
+      <section className="py-32">
+        <div className="max-w-4xl mx-auto px-6">
+          <ScrollReveal>
+            <div className="text-center mb-16">
+              <h2 className="font-display text-5xl md:text-6xl mb-6 tracking-tight">
+                Tarif <span className="italic">Unique</span>
+              </h2>
+              <p className="text-lg text-gray-600 font-light">
+                Une offre simple et transparente
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.2}>
+            <div className="glass-dark p-12 md:p-16 text-center hover-lift border border-gray-200">
+              <div className="font-display text-7xl md:text-8xl mb-6 tracking-tight">
                 300€
               </div>
-              <motion.div
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute -top-8 -right-8 text-4xl"
-              >
-                ✨
-              </motion.div>
-            </motion.div>
+              <div className="text-xl mb-12 tracking-wide uppercase font-light text-gray-600">
+                Session Complète
+              </div>
 
-            <p className="text-xl sm:text-2xl text-gray-700 mb-8 font-semibold">
-              Shooting Photo Complet
-            </p>
+              <div className="space-y-4 mb-12 max-w-md mx-auto">
+                {pricingFeatures.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-3 text-left text-gray-700"
+                  >
+                    <div className="w-1 h-1 bg-black rounded-full" />
+                    <span className="font-light">{feature}</span>
+                  </div>
+                ))}
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-10 max-w-2xl mx-auto text-left">
-              {[
-                { icon: '⏰', text: 'Aucune limite de temps' },
-                { icon: '📷', text: 'Photos éditées sans limite' },
-                { icon: '🏠', text: 'Studio professionnel et confortable' },
-                { icon: '🤝', text: 'Possibilité de collaboration' }
-              ].map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex items-center gap-3 p-4 bg-gradient-to-r from-pink-50 to-blue-50 rounded-xl"
-                >
-                  <span className="text-3xl">{item.icon}</span>
-                  <span className="text-gray-700 font-medium">{item.text}</span>
-                </motion.div>
-              ))}
+              <MagneticButton strength={0.3}>
+                <Link href="/contact" className="btn-elegant text-xs px-12 py-4">
+                  Réserver Maintenant
+                </Link>
+              </MagneticButton>
             </div>
-
-            <Link href="/contact">
-              <Button size="lg" className="text-lg sm:text-xl px-8 sm:px-12 py-4 sm:py-6 shadow-2xl hover:scale-105 transition-transform">
-                🎯 Réserver Maintenant
-              </Button>
-            </Link>
-          </motion.div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 sm:py-20 lg:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="max-w-3xl mx-auto"
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 font-playfair text-gradient">
-              Prêt à Révéler Votre Beauté ?
+      <section className="py-32 border-t border-gray-200">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <ScrollReveal>
+            <h2 className="font-display text-5xl md:text-6xl lg:text-7xl mb-8 tracking-tight leading-tight">
+              Prêt à révéler
+              <br />
+              <span className="italic">votre beauté ?</span>
             </h2>
-            <p className="text-lg sm:text-xl text-gray-600 mb-8 px-4 leading-relaxed">
-              Contactez-nous dès aujourd'hui pour planifier votre shooting photo
-              <br className="hidden sm:block" />
-              et commencer cette expérience unique
+            <p className="text-lg text-gray-600 mb-12 font-light">
+              Contactez-nous pour planifier votre séance photographique
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
-              <Link href="/contact">
-                <Button size="lg" className="w-full sm:w-auto min-w-[200px] text-lg">
-                  📞 Nous Contacter
-                </Button>
+            <MagneticButton strength={0.3}>
+              <Link href="/contact" className="btn-elegant text-xs px-12 py-4">
+                Nous Contacter
               </Link>
-              <Link href="/pricing">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto min-w-[200px] text-lg">
-                  💰 Voir les Tarifs
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
+            </MagneticButton>
+          </ScrollReveal>
         </div>
       </section>
     </div>
   );
 }
 
-const stats = [
-  { value: '300€', label: 'Prix Fixe' },
-  { value: '∞', label: 'Photos Éditées' },
-  { value: '5⭐', label: 'Service Premium' },
+const stats: Array<{
+  value: number | string;
+  suffix: string;
+  label: string;
+  animated: boolean;
+}> = [
+  { value: 300, suffix: '€', label: 'Prix Fixe', animated: true },
+  { value: '∞', suffix: '', label: 'Photos Éditées', animated: false },
+  { value: 100, suffix: '+', label: 'Clients Satisfaits', animated: true },
 ];
 
-const features = [
+const services = [
   {
-    icon: '📸',
-    title: 'Expertise Professionnelle',
-    description: 'Photographe expérimenté spécialisé dans la photographie boudoir et mode avec un œil artistique unique',
+    icon: '○',
+    title: 'Boudoir',
+    description:
+      'Des portraits intimes et élégants qui célèbrent votre féminité dans un cadre raffiné et confortable.',
   },
   {
-    icon: '✨',
-    title: 'Ambiance Élégante',
-    description: 'Studio moderne, lumineux et confortable conçu pour vous mettre parfaitement à l\'aise',
+    icon: '△',
+    title: 'Mode',
+    description:
+      'Photographies artistiques et contemporaines mettant en valeur votre style et votre personnalité unique.',
   },
   {
-    icon: '🎨',
-    title: 'Retouche Professionnelle',
-    description: 'Toutes vos photos sont soigneusement éditées avec des techniques professionnelles pour un résultat parfait',
+    icon: '□',
+    title: 'Artistique',
+    description:
+      'Créations photographiques sur mesure pour des projets personnels ou professionnels exigeants.',
   },
-  {
-    icon: '👗',
-    title: 'Conseil Styling',
-    description: 'Conseils personnalisés sur les tenues, poses et mises en scène pour sublimer votre beauté',
-  },
-  {
-    icon: '🔒',
-    title: 'Confidentialité Totale',
-    description: 'Vos photos restent privées et ne seront jamais partagées sans votre consentement explicite',
-  },
-  {
-    icon: '💎',
-    title: 'Expérience Premium',
-    description: 'Service haut de gamme avec attention aux détails pour une expérience mémorable',
-  },
+];
+
+const pricingFeatures = [
+  'Durée illimitée',
+  'Photos éditées sans limite',
+  'Studio professionnel équipé',
+  'Retouche professionnelle incluse',
+  'Livraison digitale haute résolution',
+  'Conseils styling personnalisés',
 ];
