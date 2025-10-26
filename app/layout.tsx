@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
 
 export const metadata: Metadata = {
-  title: "Studio Boudoir - Photographie Boudoir, Érotique & Mode",
-  description: "Studio de photographie professionnelle spécialisé en boudoir, érotique et mode. Shooting photo 300€ sans limite de temps ni de photos éditées.",
-  keywords: ["photographie boudoir", "photo érotique", "studio photo", "mode", "shooting photo"],
+  title: "FreeTube Modern - Lecteur YouTube sans pub et privacy-focused",
+  description: "Version web moderne de FreeTube. Regardez vos vidéos YouTube préférées sans publicités ni tracking. 100% gratuit et open-source.",
+  keywords: ["youtube", "freetube", "sans pub", "privacy", "video", "player"],
 };
 
 export default function RootLayout({
@@ -16,14 +14,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body className="font-sans antialiased">
-        <CustomCursor />
+    <html lang="fr" className="dark">
+      <body className="font-sans antialiased bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white">
         <Navbar />
-        <main className="min-h-screen pt-20">
+        <main className="min-h-screen pt-16">
           {children}
         </main>
-        <Footer />
       </body>
     </html>
   );

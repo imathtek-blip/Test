@@ -1,7 +1,8 @@
 {
-  "name": "photo-studio",
-  "version": "0.1.0",
+  "name": "freetube-modern",
+  "version": "1.0.0",
   "private": true,
+  "description": "Version web moderne de FreeTube - Lecteur YouTube sans pub et privacy-focused",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
